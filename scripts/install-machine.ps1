@@ -1,21 +1,21 @@
 $account = "demeesterdev"
-$repo    = "dotfiles-windows"
-$branch  = "main"
+$repo = "dotfiles-windows"
+$branch = "main"
 
 $dotfilesTempDir = Join-Path $env:TEMP "dotfiles"
-if (![System.IO.Directory]::Exists($dotfilesTempDir)) {[System.IO.Directory]::CreateDirectory($dotfilesTempDir)}
+if (![System.IO.Directory]::Exists($dotfilesTempDir)) { [System.IO.Directory]::CreateDirectory($dotfilesTempDir) }
 $sourceFile = Join-Path $dotfilesTempDir "dotfiles.zip"
 $dotfilesInstallDir = Join-Path $dotfilesTempDir "$repo-$branch"
 
 
 function Download-File {
-  param (
-    [string]$url,
-    [string]$file
-  )
-  Write-Host "Downloading $url to $file"
-  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-  Invoke-WebRequest -Uri $url -OutFile $file -UseBasicParsing
+    param (
+        [string]$url,
+        [string]$file
+    )
+    Write-Host "Downloading $url to $file"
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Invoke-WebRequest -Uri $url -OutFile $file -UseBasicParsing
 }
 
 function Unzip-File {
@@ -35,30 +35,34 @@ function Unzip-File {
         try {
             [System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
             [System.IO.Compression.ZipFile]::ExtractToDirectory("$filePath", "$destinationPath")
-        } catch {
+        }
+        catch {
             Write-Warning -Message "Unexpected Error. Error details: $_.Exception.Message"
         }
-    } else {
+    }
+    else {
         try {
             $shell = New-Object -ComObject Shell.Application
             $shell.Namespace($destinationPath).copyhere(($shell.NameSpace($filePath)).items())
-        } catch {
+        }
+        catch {
             Write-Warning -Message "Unexpected Error. Error details: $_.Exception.Message"
         }
     }
 }
 
 Download-File "https://github.com/$account/$repo/archive/$branch.zip" $sourceFile
-if ([System.IO.Directory]::Exists($dotfilesInstallDir)) {[System.IO.Directory]::Delete($dotfilesInstallDir, $true)}
+if ([System.IO.Directory]::Exists($dotfilesInstallDir)) { [System.IO.Directory]::Delete($dotfilesInstallDir, $true) }
 Unzip-File $sourceFile $dotfilesTempDir
 
 
 try {
-& (join-path (join-path $dotfilesInstallDir 'scripts') 'configure-machine.ps1')
-& (join-path (join-path $dotfilesInstallDir 'scripts') 'bootstrap.ps1')
-}catch{
+    & (join-path (join-path $dotfilesInstallDir 'scripts') 'bootstrap.ps1')
+    & (join-path (join-path $dotfilesInstallDir 'scripts') 'configure-machine.ps1')
+}
+catch {
     $_
 }
-finally{
+finally {
 
 }
