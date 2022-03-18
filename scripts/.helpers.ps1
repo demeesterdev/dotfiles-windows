@@ -47,18 +47,21 @@ function Set-RegistryItemProperty {
         [switch]
         $ShouldRebootAfterChange=$false
     )
-    
-    $Parent = split-path -Parent $Path
-    if(!(Test-Path $Parent)){
-        New-RegistryPath -Path $Parent
+    write-Verbose ('Set-RegistryItemProperty(Path={0};PropertyName={1};PropertyValue={2})' -f @(
+        "$Path",
+        "$PropertyName",
+        "$PropertyValue"
+    ))
+
+    if(!(Test-Path $Path)){
+        New-RegistryPath -Path $Path
+    }
+    try{
+        $oldValue = Get-ItemPropertyValue -Path $Path -Name $PropertyName -erroraction SilentlyContinue    
+    }catch{
+        $oldvalue = $null
     }
 
-    if (Test-Path $Path) {
-        $oldValue = Get-ItemPropertyValue -Path $Path -Name $PropertyName -erroraction SilentlyContinue    
-    }else{
-        $oldValue = $null
-    }
-    
     $SetItemPropertySplat = @{
         Path = $Path
         Name = $PropertyName

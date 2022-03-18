@@ -13,8 +13,12 @@ if (!(Verify-Elevated)) {
 ### package providers
 write-header 'Installing Package Providers'
 
-Get-PackageProvider NuGet -Force | Out-Null
-Get-PackageProvider WinGet -Force | Out-Null
+if((get-packageprovider -ListAvailable).Name -notcontains ('NuGet')){
+    Install-PackageProvider NuGet -Force | out-null
+}
+if((get-packageprovider -ListAvailable).Name -notcontains ('Winget')){
+    Install-PackageProvider WinGet -Force | out-null
+}
 
 write-information " ... Complete ..."
 
@@ -23,7 +27,6 @@ write-header 'Installing PowerShell Modules'
 
 write-information " - Posh-git "
 Install-Module Posh-Git -Scope CurrentUser -Force
-
 write-information " ... Complete ..."
 
 
