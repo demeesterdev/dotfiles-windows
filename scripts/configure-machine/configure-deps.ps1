@@ -62,6 +62,7 @@ $requiredPackages = @(
     #system and cli
     'Git.Git'
     'GitHub.cli'
+    'Microsoft.PowerShell'
     'Microsoft.WindowsTerminal'
     'Microsoft.AzureCLI'
     
