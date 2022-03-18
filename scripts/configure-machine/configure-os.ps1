@@ -11,8 +11,10 @@ if (!(Verify-Elevated)) {
 ###############################################################################
 # Enable Developer Mode
 Set-RegistryItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" "AllowDevelopmentWithoutDevLicense" 1 -ShouldRebootAfterChange
-# Bash on Windows
+# WSL v2
 Enable-WindowsOptionalFeatureOnline "Microsoft-Windows-Subsystem-Linux"
+Enable-WindowsOptionalFeatureOnline "VirtualMachinePlatform"
+wsl.exe --set-default-version 2 1>null
 
 ###############################################################################
 ### Devices, Power, and Startup                                               #
@@ -114,7 +116,7 @@ foreach ($UnwantedAppxPackage in $UnwantedAppxPackages){
     Get-AppXProvisionedPackage -Online | Where-Object DisplayName -like $UnwantedAppxPackage | Remove-AppxProvisionedPackage -Online | out-null
     }
     catch{
-        Write-Information ('    [ERR]:' -f $_)
+        Write-Information ('    [ERR]:' -f $_.ErrorDetails)
     }
 }
 
