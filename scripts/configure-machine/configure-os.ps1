@@ -107,8 +107,13 @@ $UnwantedAppxPackages = @(
 write-information 'removing unwanted appx packages:'
 foreach ($UnwantedAppxPackage in $UnwantedAppxPackages){
     write-information ('  - {0}' -f $UnwantedAppxPackage)
+    try{
     Get-AppxPackage $UnwantedAppxPackage -AllUsers | Remove-AppxPackage | out-null
     Get-AppXProvisionedPackage -Online | Where DisplayName -like $UnwantedAppxPackage | Remove-AppxProvisionedPackage -Online -ErrorAction 'silentlyContinue' | out-null
+    }
+    catch{
+        Write-Information ('    [ERR]:' -f $_)
+    }
 }
 
 # Uninstall Windows Media Player
