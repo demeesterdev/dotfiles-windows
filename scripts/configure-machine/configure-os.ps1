@@ -109,7 +109,7 @@ foreach ($UnwantedAppxPackage in $UnwantedAppxPackages){
     write-information ('  - {0}' -f $UnwantedAppxPackage)
     try{
     Get-AppxPackage $UnwantedAppxPackage -AllUsers | Remove-AppxPackage | out-null
-    Get-AppXProvisionedPackage -Online | Where DisplayName -like $UnwantedAppxPackage | Remove-AppxProvisionedPackage -Online -ErrorAction 'silentlyContinue' | out-null
+    Get-AppXProvisionedPackage -Online | Where-Object DisplayName -like $UnwantedAppxPackage | Remove-AppxProvisionedPackage -Online | out-null
     }
     catch{
         Write-Information ('    [ERR]:' -f $_)
