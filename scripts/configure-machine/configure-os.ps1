@@ -118,6 +118,18 @@ foreach ($UnwantedAppxPackage in $UnwantedAppxPackages){
     }
 }
 
+
+Write-Information 'removing unwanted start menu links:'
+$unwantedlinks = @(
+    'lastpass.lnk'
+)
+$startmenupath = "C:\ProgramData\Microsoft\Windows\Start Menu\"
+foreach($unwantedlink in $unwantedlinks){
+    Get-ChildItem -Path $startmenupath -Filter $unwantedlink -Recurse |
+        Remove-Item -Force |
+        out-null
+}
+
 # Uninstall Windows Media Player
 Disable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRestart -WarningAction SilentlyContinue | Out-Null
 
