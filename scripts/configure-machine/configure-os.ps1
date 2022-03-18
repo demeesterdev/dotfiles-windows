@@ -156,4 +156,4 @@ catch{
 
 # Bash on Windows
 Enable-WindowsOptionalFeatureOnline 'Windows-Defender-Default-Definitions'
-Enable-WindowsOptionalFeatureOnline 'Windows-Defender-ApplicationGurad'
+Enable-WindowsOptionalFeatureOnline 'Windows-Defender-ApplicationGuard'

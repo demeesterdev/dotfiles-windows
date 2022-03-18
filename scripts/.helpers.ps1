@@ -100,7 +100,11 @@ function Enable-WindowsOptionalFeatureOnline {
     )
 
     process {
-        $Feature = Get-WindowsOptionalFeature -Online -FeatureName $FeatureName
+        $features = Get-WindowsOptionalFeature -Online
+        $Feature = $features.where({$_.FeatureName -eq $FeatureName})
+        if(@($Feature).count -ne 1){
+            Write-Warning "Feature $FeatureName not found. Could not enable"
+        }
         if($feature.State -ne 'Enabled'){
             Enable-WindowsOptionalFeature -Online -All -FeatureName $featureName -NoRestart -WarningAction SilentlyContinue | Out-Null
             $script:ShouldRebootFromDotfiles = $true
