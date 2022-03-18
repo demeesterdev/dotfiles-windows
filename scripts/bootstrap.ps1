@@ -8,7 +8,7 @@ $dotfilesSourceDir = join-path $dotfilesPath 'dotfiles'
 $currentProfileDir = Split-Path -parent $profile
 $ProfileDirs = @()
 $profileDirs += $currentProfileDir
-if ((split-path -Leaf $profileDir) -eq 'WindowsPowershell') {
+if ((split-path -Leaf $currentProfileDir) -eq 'WindowsPowershell') {
     $ProfileDirs += join-path (split-path -Parent $profileDir) 'Powershell'
 }
 foreach ($profileDir in $ProfileDirs) {
