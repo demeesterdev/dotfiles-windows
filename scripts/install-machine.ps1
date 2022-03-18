@@ -55,6 +55,7 @@ Unzip-File $sourceFile $dotfilesTempDir
 
 try {
 & (join-path (join-path $dotfilesInstallDir 'scripts') 'configure-machine.ps1')
+& (join-path (join-path $dotfilesInstallDir 'scripts') 'bootstrap.ps1')
 }catch{
     $_
 }
