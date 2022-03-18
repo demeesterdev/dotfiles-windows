@@ -101,6 +101,10 @@ $UnwantedAppxPackages = @(
     "Microsoft.XboxApp"
     "Microsoft.ZuneMusic"
     "Microsoft.ZuneVideo"
+    "Microsoft.PowerAutomateDesktop"
+    "*.HPPrinterControls"
+    "*.HPInc.EnergyStar"
+    "*.DropboxOEM"
 )
 write-information 'removing unwanted appx packages:'
 foreach ($UnwantedAppxPackage in $UnwantedAppxPackages){
@@ -119,3 +123,25 @@ Disable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRest
 
 # Prevent "Suggested Applications" from returning
 Set-RegistryItemProperty "HKLM:\Software\Policies\Microsoft\Windows\CloudContent" "DisableWindowsConsumerFeatures" 1
+
+if((get-packageprovider -ListAvailable).Name -notcontains ('Winget')){
+    Install-PackageProvider WinGet -Force | out-null
+}
+
+
+###############################################################################
+### Default Windows Applications                                              #
+###############################################################################
+Write-Header "Configuring Windows Defender..."
+write-information "Uninstalling preinstalled services"
+try{
+Get-AppxPackage "*.McAfeeSecurity" -AllUsers | Remove-AppxPackage | out-null
+Get-AppXProvisionedPackage -Online | Where-Object DisplayName -like $UnwantedAppxPackage | Remove-AppxProvisionedPackage -Online | out-null
+}
+catch{
+    Write-Information ('    [ERR]:' -f $_)
+}
+
+# Bash on Windows
+Enable-WindowsOptionalFeatureOnline 'Windows-Defender-Default-Definitions'
+Enable-WindowsOptionalFeatureOnline 'Windows-Defender-ApplicationGurad'

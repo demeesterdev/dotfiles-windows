@@ -8,12 +8,13 @@ if (!(Verify-Elevated)) {
 ###############################################################################
 ### Privacy                                                                   #
 ###############################################################################
+write-header "Configuring Privacy Options..."
 
 Set-RegistryItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" "Enabled" 0
 Remove-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" "Id" -ErrorAction SilentlyContinue
 
 # General: Disable Application launch tracking: Enable: 1, Disable: 0
-Set-RegistryItemProperty "HKCU:\\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "Start-TrackProgs" 0
+Set-RegistryItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "Start-TrackProgs" 0
 
 # General: Disable key logging & transmission to Microsoft: Enable: 1, Disable: 0
 # Disabled when Telemetry is set to Basic
