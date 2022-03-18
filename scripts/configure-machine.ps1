@@ -1,5 +1,7 @@
 . (join-path $PSScriptRoot '.helpers.ps1')
 $InformationPreference = 'Continue'
+$ProgressPreference = "SilentlyContinue"
+
 if (!(Verify-Elevated)) {
     Start-Elevated (join-path $PSScriptRoot 'configure-machine.ps1')
     return

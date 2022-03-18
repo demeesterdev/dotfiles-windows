@@ -1,3 +1,4 @@
+$ProgressPreference = "SilentlyContinue"
 $dotfilesPath = Split-path -parent $PSScriptRoot
 $profileSourceDir = join-path $dotfilesPath 'psprofile'
 $componentSourceDir = join-path $profileSourceDir 'components'
