@@ -125,7 +125,7 @@ $unwantedlinks = @(
 )
 $startmenupath = "C:\ProgramData\Microsoft\Windows\Start Menu\"
 foreach($unwantedlink in $unwantedlinks){
-    write-information ('  - {0}' -f $unwantedlinke)
+    write-information ('  - {0}' -f $unwantedlink)
     Get-ChildItem -Path $startmenupath -Filter $unwantedlink -Recurse |
         Remove-Item -Force |
         out-null
