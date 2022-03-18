@@ -47,9 +47,18 @@ function Set-RegistryItemProperty {
         [switch]
         $ShouldRebootAfterChange=$false
     )
-    $oldValue = Get-ItemPropertyValue -Path $Path -Name $PropertyName -erroraction SilentlyContinue
+    
+    $Parent = split-path -Parent $Path
+    if(!(Test-Path $Parent)){
+        New-RegistryPath -Path $Parent
+    }
 
-    if (!(Test-Path $Path)) {New-Item -Path $Path -Type Folder | Out-Null}
+    if (Test-Path $Path) {
+        $oldValue = Get-ItemPropertyValue -Path $Path -Name $PropertyName -erroraction SilentlyContinue    
+    }else{
+        $oldValue = $null
+    }
+    
     $SetItemPropertySplat = @{
         Path = $Path
         Name = $PropertyName
@@ -63,6 +72,20 @@ function Set-RegistryItemProperty {
     if($ShouldRebootAfterChange -and ($oldValue -ne $PropertyValue)){
         $script:ShouldRebootFromDotfiles = $true
     }
+}
+
+function New-RegistryPath {
+    [CmdletBinding()]
+    param (
+        [Parameter(Position=0,Mandatory=$true)]
+        [string]
+        $Path
+    )
+    $Parent = split-path -Parent $Path
+    if(!(Test-Path $Parent)){
+        New-RegistryPath -Path $Parent
+    }
+    New-Item -Path $Path -Type Folder | Out-Null
 }
 
 function Enable-WindowsOptionalFeatureOnline {
