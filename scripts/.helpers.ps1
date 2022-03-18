@@ -10,7 +10,7 @@ function Start-Elevated ($CommandDefinition) {
     $newProcess = new-object System.Diagnostics.ProcessStartInfo "PowerShell";
     $newProcess.Arguments = $CommandDefinition;
     $newProcess.Verb = "runas";
-    $newProcessObj = [System.Diagnostics.Process]::Start($newProcess);
+    [System.Diagnostics.Process]::Start($newProcess) | out-null;
 
 }
 
