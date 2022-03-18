@@ -49,7 +49,7 @@ if ($null -eq (get-command winget -erroraction 'SilentlyContinue')) {
 
 if ($null -eq (get-command cinst -erroraction 'SilentlyContinue')) {
     write-information "  - Installing chocolaty"
-    iex (new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1')
+    Invoke-Expression (new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1')
     Refresh-Environment
     choco feature enable -n=allowGlobalConfirmation
 }else{
