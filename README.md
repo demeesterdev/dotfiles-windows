@@ -13,5 +13,12 @@ These are my dotfiles. This repository helps me to setup and maintain my windows
 To configure a new machine when git is not yet installed:
 
 ```powershell
+Set-ExecutionPolicy 'Unrestricted' -Scope 'Process';
+iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/demeesterdev/dotfiles-windows/main/scripts/install-machine.ps1'))
+```
+
+to just install dotfiles without git installed
+
+```powershell
 iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/demeesterdev/dotfiles-windows/main/scripts/install.ps1'))
 ```
