@@ -27,6 +27,7 @@ write-header 'Installing PowerShell Modules'
 
 write-information " - Posh-git "
 Install-Module Posh-Git -Scope CurrentUser -Force
+Install-module WSL -Scope CurrentUser -Force
 write-information " ... Complete ..."
 
 
