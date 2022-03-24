@@ -14,6 +14,7 @@ Set-RegistryItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppMod
 # WSL v2
 Enable-WindowsOptionalFeatureOnline "Microsoft-Windows-Subsystem-Linux"
 Enable-WindowsOptionalFeatureOnline "VirtualMachinePlatform"
+Refresh-Environment
 wsl.exe --set-default-version 2 1>null
 
 ###############################################################################
