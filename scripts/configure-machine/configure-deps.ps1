@@ -102,6 +102,8 @@ foreach ($package in $requiredPackages){
 write-information "  - Installing 7zip"
 choco install 7zip.install --limit-output
 
+write-information "  - Installing 7zip"
+choco install bitwarden-cli --limit-output
 
 Refresh-Environment
 
