@@ -42,7 +42,7 @@ function Install-WSLDistribution {
         # command to run installing the repository
         [Parameter(ParameterSetName='Distro-Install.Init.Configure')]
         [string]
-        $DotfilesInstallCommand='~/dotfiles/bin/install.sh',
+        $DotfilesInstallCommand='~/dotfiles/bin/install.sh dotfiles',
 
         [Parameter()]
         [switch]
@@ -109,6 +109,8 @@ function Install-WSLDistribution {
     }
 
     if($PSCmdlet.ParameterSetName -eq 'Distro-Install.Init.Configure' ){
+        Update-WSLNameServer -Distribution $Distribution
+        
         Install-WSLDotfiles `
             -Distribution $Distribution `
             -DotfilesRepository $DotfilesRepository `
