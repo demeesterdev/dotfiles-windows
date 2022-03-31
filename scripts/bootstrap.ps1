@@ -5,6 +5,7 @@ $componentSourceDir = join-path $profileSourceDir 'components'
 $functionsSourceDir = join-path $profileSourceDir 'functions'
 $dotfilesSourceDir = join-path $dotfilesPath 'dotfiles'
 
+$dotfilesPath | set-content (join-path $env:USERPROFILE '.dotfileslocation')
 
 $currentProfileDir = Split-Path -parent $profile
 $ProfileDirs = @()
@@ -31,4 +32,3 @@ Remove-Variable ProfileDirs
 Remove-Variable ProfileDir
 Remove-Variable componentDir
 Remove-Variable functionsDir
-
