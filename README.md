@@ -14,7 +14,8 @@ To configure a new machine when git is not yet installed:
 
 ```powershell
 Set-ExecutionPolicy 'Unrestricted' -Scope 'Process';
-iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/demeesterdev/dotfiles-windows/main/scripts/install-machine.ps1'))
+$env:DOTFILES_CONFIGURE_MACHINE = $true;
+iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/demeesterdev/dotfiles-windows/main/scripts/install.ps1'))
 ```
 
 to just install dotfiles without git installed
