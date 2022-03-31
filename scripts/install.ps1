@@ -64,8 +64,6 @@ try {
         Write-Host "moving $dotfilesInstallDir/* to $targetPath"
         if ([System.IO.Directory]::Exists($targetPath)) { [System.IO.Directory]::Delete($targetPath, $true) }
         Copy-Item -Path $dotfilesInstallDir -Destination $targetPath -recurse -Force
-
-        $targetpath | set-content (join-path $env:USERPROFILE '.dotfileslocation')
     }
     else {
         if ([System.IO.Directory]::Exists($targetPath)) { remove-item -Path $targetPath -Recurse -Force }
