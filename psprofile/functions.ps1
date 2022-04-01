@@ -24,6 +24,6 @@ Function Set-SoundVolume([Parameter(mandatory=$true)][Int32] $Volume){
 Function Set-SoundMute {[Audio]::Mute = $true}
 Function Set-SoundUnmute {[Audio]::Mute = $false}
 
-get-childitem (join-path $PSScriptRoot "functions") -filter '*.ps1' | foreach-Object {
+get-childitem (join-path $PSScriptRoot "functions") -filter '*.ps1' -Recurse | foreach-Object {
     . ($_.fullname)
 }
