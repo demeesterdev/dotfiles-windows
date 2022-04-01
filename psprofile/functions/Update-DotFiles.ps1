@@ -19,8 +19,8 @@ function Update-DotFiles {
             $localhash= git rev-parse '@'
             $remotehash= git rev-parse '@{u}'
             if($localhash -ne $remotehash){
-                git clean -f #cleaning to avoid mergeconflicts
-                git pull
+                $null = git clean -f #cleaning to avoid mergeconflicts
+                $null = git pull
             }
             pop-location
             & (join-path (join-path $dotfilesPath 'scripts') 'bootstrap.ps1')
@@ -34,7 +34,7 @@ function Update-DotFiles {
         $installSCriptLocation = join-path (join-path $dotfilesPath 'scripts') 'install.ps1'
         #missing git as item installing from install.ps1
         if(test-path $installSCriptLocation){
-            . $installSCriptLocation
+            . $installSCriptLocation -targetPath $dotfilesPath
         }else{
             Write-Error "could not find install script 'scripts/install.ps1' in dotfileslocation $dotfilespath. run bootstrap or install script. See Readme for more info" -ErrorAction 'stop'
         }
