@@ -13,6 +13,7 @@ function Update-DotFiles {
     $dotfilesGitPath = join-path $dotfilesPath '.\.git'
     if (test-Path $dotfilesGitPath){
         #folder is git folder can update with git.
+        push-location $dotfilesPath
         try{
             $null = git remote update 2>1
             $localhash= git rev-parse '@'
@@ -20,12 +21,15 @@ function Update-DotFiles {
             if($localhash -ne $remotehash){
                 git clean -f #cleaning to avoid mergeconflicts
                 git pull
-                & (join-path (join-path $dotfilesPath 'scripts') 'bootstrap.ps1')
             }
+            pop-location
+            & (join-path (join-path $dotfilesPath 'scripts') 'bootstrap.ps1')
         }
         catch{
+            Pop-Location
             write-error $_ -ErrorAction 'stop'
         }
+        
     }else{
         $installSCriptLocation = join-path (join-path $dotfilesPath 'scripts') 'install.ps1'
         #missing git as item installing from install.ps1
