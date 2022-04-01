@@ -78,14 +78,11 @@ $requiredPackages = @(
     'Logitech.GHUB'
     'Obsidian.Obsidian'
     'SlackTechnologies.Slack'
-    # '7zip.7zip' -forces reboot using choco
+    # '7zip.7zip' -forces reboot trough winget, install with choco
 
     # dev tools and frameworks
     'Microsoft.PowerToys'
     'Microsoft.VisualStudioCode'
-    'vim.vim'
-    'GoLang.Go'
-    'Python.Python.3'
 )
 
 #installing os packages
@@ -102,7 +99,7 @@ foreach ($package in $requiredPackages){
 write-information "  - Installing 7zip"
 choco install 7zip.install --limit-output
 
-write-information "  - Installing 7zip"
+write-information "  - Installing bitwarden cli"
 choco install bitwarden-cli --limit-output
 
 Refresh-Environment
