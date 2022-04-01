@@ -14,7 +14,7 @@ function Update-DotFiles {
     if (test-Path $dotfilesGitPath){
         #folder is git folder can update with git.
         try{
-            git remote update
+            $null = git remote update 2>1
             $localhash= git rev-parse '@'
             $remotehash= git rev-parse '@{u}'
             if($localhash -ne $remotehash){
