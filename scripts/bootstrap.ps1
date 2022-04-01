@@ -19,6 +19,7 @@ foreach ($profileDir in $ProfileDirs) {
 
     New-Item $profileDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
     New-Item $componentDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+    if ([System.IO.Directory]::Exists($functionsDir)) { remove-item -Path $functionsDir -Recurse -Force }
     New-Item $functionsDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
 
     Copy-Item -Path (join-path $profileSourceDir '*.ps1') -Destination $profileDir
