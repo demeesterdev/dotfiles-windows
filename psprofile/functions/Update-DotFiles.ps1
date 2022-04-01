@@ -1,7 +1,7 @@
 function Update-DotFiles {
     $dotfilespointerfilePath = join-path $env:USERPROFILE '.dotfileslocation'
     
-    if(!(test-path $dotfilespointerfile -PathType Leaf)){
+    if(!(test-path $dotfilespointerfilePath -PathType Leaf)){
         Write-Error 'dotfiles pointerfile not found. run bootstrap or install script. See Readme for more info' -erroraction 'stop'
     }
 
@@ -14,12 +14,13 @@ function Update-DotFiles {
     if (test-Path $dotfilesGitPath){
         #folder is git folder can update with git.
         try{
-            git remote update --quiet
+            git remote update
             $localhash= git rev-parse '@'
             $remotehash= git rev-parse '@{u}'
             if($localhash -ne $remotehash){
                 git clean -f #cleaning to avoid mergeconflicts
                 git pull
+                & (join-path (join-path $dotfilesPath 'scripts') 'bootstrap.ps1')
             }
         }
         catch{
