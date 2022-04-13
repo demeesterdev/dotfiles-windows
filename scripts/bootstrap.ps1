@@ -23,8 +23,8 @@ foreach ($profileDir in $ProfileDirs) {
     New-Item $functionsDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
 
     Copy-Item -Path (join-path $profileSourceDir '*.ps1') -Destination $profileDir
-    Copy-Item -Path (join-path $componentSourceDir '**') -Destination $componentDir -Include **
-    Copy-Item -Path (join-path $functionsSourceDir '**') -Destination $functionsDir -Include **
+    Copy-Item -Path (join-path $componentSourceDir '**') -Destination $componentDir -Include ** -Recurse
+    Copy-Item -Path (join-path $functionsSourceDir '**') -Destination $functionsDir -Include ** -Recurse
     Copy-Item -Path (join-path $dotfilesSourceDir '**') -Destination $home -Include **
 
 }
