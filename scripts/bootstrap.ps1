@@ -19,12 +19,16 @@ foreach ($profileDir in $ProfileDirs) {
 
     New-Item $profileDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
     New-Item $componentDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
-    if ([System.IO.Directory]::Exists($functionsDir)) { remove-item -Path $functionsDir -Recurse -Force }
+    if ([System.IO.Directory]::Exists($functionsDir)) { 
+        # fix to avoid onedrive error Access to the cloud file is denied
+        # removing all existing ps functions works as well
+        get-childitem -LiteralPath $functionsdir -filter '*.ps1' -Recurse | foreach-Object {$_.delete()}
+     }
     New-Item $functionsDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
 
     Copy-Item -Path (join-path $profileSourceDir '*.ps1') -Destination $profileDir
     Copy-Item -Path (join-path $componentSourceDir '**') -Destination $componentDir -Include ** -Recurse
-    Copy-Item -Path (join-path $functionsSourceDir '**') -Destination $functionsDir -Include ** -Recurse
+    Copy-Item -Path (join-path $functionsSourceDir '**') -Destination $functionsDir -Include ** -Recurse -ErrorAction SilentlyContinue
     Copy-Item -Path (join-path $dotfilesSourceDir '**') -Destination $home -Include **
 
 }
