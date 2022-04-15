@@ -1,7 +1,8 @@
-# Profile for all hosts
-# ===========
+# this profile can be used if you are simply copying the psprofile filed to your machine.
+# you can also use the bootstrap script in the scripts folder of this repo.
+# this will create a line in your psprofile wich dotsources the profile loader.
 
-@("components", "functions", "aliases", "exports", "extra") |
-Foreach-Object { join-path $PSScriptRoot "$_.ps1" } |
-Where-Object { Test-Path $_ } |
-ForEach-Object -Process { Invoke-Expression ". '$_'"}
+# group dotfiles autoloader
+# loads the psprofile from a managed dotfiles repository at C:\Users\tdemeester\dotfiles\dotfiles
+Invoke-Expression ". '$(join-path $PSScriptRoot 'profile.loader.ps1')'"
+#endgroup dotfiles autoloader
