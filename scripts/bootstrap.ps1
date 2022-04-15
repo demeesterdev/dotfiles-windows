@@ -1,39 +1,45 @@
 $ProgressPreference = "SilentlyContinue"
 $dotfilesPath = Split-path -parent $PSScriptRoot
-$profileSourceDir = join-path $dotfilesPath 'psprofile'
-$componentSourceDir = join-path $profileSourceDir 'components'
-$functionsSourceDir = join-path $profileSourceDir 'functions'
-$dotfilesSourceDir = join-path $dotfilesPath 'dotfiles'
-
 $dotfilesPath | set-content (join-path $env:USERPROFILE '.dotfileslocation')
 
+# copy dotfiles
+$dotfilesSourceDir = join-path $dotfilesPath 'dotfiles'
+Copy-Item -Path (join-path $dotfilesSourceDir '**') -Destination $home -Include ** -Recurse
+
+# link to the psprofile files
+
+$GroupStartLine = '#group dotfiles autoloader'
+$GroupEndLine = '#endgroup dotfiles autoloader'
+$profileSourceDir = join-path $dotfilesPath 'psprofile' 
+$profileloader = join-path $profileSourceDir 'profile.loader.ps1' 
+
+#configure for windows powershell and pwsh
 $currentProfileDir = Split-Path -parent $profile
 $ProfileDirs = @()
 $profileDirs += $currentProfileDir
 if ((split-path -Leaf $currentProfileDir) -eq 'WindowsPowershell') {
     $ProfileDirs += join-path (split-path -Parent $currentProfileDir) 'Powershell'
 }
+
+#create regerence to loader
+
+$loaderContent = @"
+# loads the psprofile from a managed dotfiles repository at $dotfilesSourceDir
+Invoke-Expression ". '$profileloader'"
+"@
+
 foreach ($profileDir in $ProfileDirs) {
-    $componentDir = Join-Path $profileDir "components"
-    $functionsDir = Join-Path $profileDir "functions"
-
-    New-Item $profileDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
-    New-Item $componentDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
-    if ([System.IO.Directory]::Exists($functionsDir)) { 
-        # fix to avoid onedrive error Access to the cloud file is denied
-        # removing all existing ps functions works as well
-        get-childitem -LiteralPath $functionsdir -filter '*.ps1' -Recurse | foreach-Object {$_.delete()}
-     }
-    New-Item $functionsDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
-
-    Copy-Item -Path (join-path $profileSourceDir '*.ps1') -Destination $profileDir
-    Copy-Item -Path (join-path $componentSourceDir '**') -Destination $componentDir -Include ** -Recurse
-    Copy-Item -Path (join-path $functionsSourceDir '**') -Destination $functionsDir -Include ** -Recurse -ErrorAction SilentlyContinue
-    Copy-Item -Path (join-path $dotfilesSourceDir '**') -Destination $home -Include **
-
+    $psprofilefile = join-path $profileDir 'profile.ps1'
+    $PSProfile = get-content $psprofilefile -Raw -ErrorAction 'silentlycontinue' 
+    $autoloaderSelector = '({0}[\n\r]+)([\s\S]*)([\n\r]+{1}[\n\r]+)' -f $GroupStartLine, $GroupEndLine 
+    if ($PSProfile -match $autoloaderSelector) { 
+        $PSProfile = $PSProfile -replace $autoloaderSelector, ('$1{0}$3' -f ($loaderContent.replace('$', '$$')))
+        set-content -Value $PSProfile -Path $psprofilefile
+    }
+    else {
+        $GroupStartLine >> $psprofilefile
+        $loaderContent >> $psprofilefile
+        $GroupEndLine >> $psprofilefile
+    }       
 }
-Remove-Variable CurrentProfileDir
-Remove-Variable ProfileDirs
-Remove-Variable ProfileDir
-Remove-Variable componentDir
-Remove-Variable functionsDir
+
