@@ -4,3 +4,6 @@ $env:GIT_EDITOR = $Env:EDITOR
 
 # Disable the Progress Bar
 $ProgressPreference='SilentlyContinue'
+
+# show all infromation 
+$InformationPreference='Continue'
