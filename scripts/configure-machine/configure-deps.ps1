@@ -30,6 +30,14 @@ Install-Module Posh-Git -Scope CurrentUser -Force
 Install-module WSL -Scope CurrentUser -Force
 write-information " ... Complete ..."
 
+write-header 'creating bin folder and adding to path'
+$binFolder = (join-path $env:USERPROFILE 'bin')
+if (![System.IO.Directory]::Exists($binFolder)) { [System.IO.Directory]::CreateDirectory($binFolder) }
+if($binFolder -notin ($env:PATH -split ';')){
+    $newPath = ('{0};{1}' -f (Get-ItemProperty -Path 'HKCU:\Environment').Path, $binfolder)
+    Set-ItemProperty -Path 'HKCU:\Environment' -Name 'Path' -Value $newPath
+    $env:PATH = '{0};{1}' -f $env:PATH,$binfolder
+}
 
 ###############################################################################
 ### winget packages                                                              #
@@ -71,6 +79,7 @@ $requiredPackages = @(
     'Microsoft.AzureCLI'
     
     #utilities
+    'GnuPG.GnuPG'
     'VideoLAN.VLC'
     'Bitwarden.Bitwarden'   
     'Google.Chrome'
@@ -105,3 +114,6 @@ choco install bitwarden-cli --limit-output
 Refresh-Environment
 
 write-information " ... Complete ..."
+
+write-header "Installing Command Line Utilities to $binFolder"
+
