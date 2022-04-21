@@ -16,9 +16,11 @@ $profileloader = join-path $profileSourceDir 'profile.loader.ps1'
 #configure for windows powershell and pwsh
 $currentProfileDir = Split-Path -parent $profile
 $ProfileDirs = @()
-$profileDirs += $currentProfileDir
-if ((split-path -Leaf $currentProfileDir) -eq 'WindowsPowershell') {
+if(!$IsCoreCLR -or $IsWindows){
     $ProfileDirs += join-path (split-path -Parent $currentProfileDir) 'Powershell'
+    $ProfileDirs += join-path (split-path -Parent $currentProfileDir) 'WindowsPowershell'
+}else{
+    $profileDirs += $currentProfileDir
 }
 
 #create regerence to loader
