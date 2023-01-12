@@ -85,7 +85,6 @@ $requiredPackages = @(
     'Google.Chrome'
     'Docker.DockerDesktop'
     'Logitech.GHUB'
-    'Obsidian.Obsidian'
     'SlackTechnologies.Slack'
     # '7zip.7zip' -forces reboot trough winget, install with choco
 
