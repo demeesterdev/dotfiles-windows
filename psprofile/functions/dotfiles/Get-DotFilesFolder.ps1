@@ -12,7 +12,7 @@ function Get-DotFilesFolder {
     }
     else {
         try {
-            $dotfilesPath = get-content $dotfilespointerfile.FullName
+            $dotfilesPath = get-content $dotfilespointerfilePath
         }
         catch {
             Write-Error ('Could not read dotfilespointerfile: {0}' -f $_) 
