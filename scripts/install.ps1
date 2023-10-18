@@ -7,9 +7,12 @@ param(
 )
 
 $dotfilesTempDir = Join-Path $env:TEMP "dotfiles"
-if (![System.IO.Directory]::Exists($dotfilesTempDir)) { [System.IO.Directory]::CreateDirectory($dotfilesTempDir) }
+if (![System.IO.Directory]::Exists($dotfilesTempDir)) { 
+    [System.IO.Directory]::Delete($dotfilesTempDir, $true)
+    [System.IO.Directory]::CreateDirectory($dotfilesTempDir) 
+}
 $sourceFile = Join-Path $dotfilesTempDir "dotfiles.zip"
-$dotfilesInstallDir = Join-Path $dotfilesTempDir "$repo-$branch"
+$dotfilesUnpackDir = Join-Path $dotfilesTempDir "$repo-$branch"
 
 function Download-File {
     param (
@@ -58,12 +61,12 @@ function Unzip-File {
 try {
     if (@(get-command 'git').count -eq 0) {
         Download-File "https://github.com/$account/$repo/archive/$branch.zip" $sourceFile
-        if ([System.IO.Directory]::Exists($dotfilesInstallDir)) { [System.IO.Directory]::Delete($dotfilesInstallDir, $true) }
+        if ([System.IO.Directory]::Exists($dotfilesUnpackDir)) { [System.IO.Directory]::Delete($dotfilesUnpackDir, $true) }
         Unzip-File $sourceFile $dotfilesTempDir
 
-        Write-Host "moving $dotfilesInstallDir/* to $targetPath"
-        if ([System.IO.Directory]::Exists($targetPath)) { [System.IO.Directory]::Delete($targetPath, $true) }
-        Copy-Item -Path $dotfilesInstallDir -Destination $targetPath -recurse -Force
+        Write-Host "moving $dotfilesUnpackDir/* to $targetPath"
+        if ([System.IO.Directory]::Exists($targetPath)) { remove-item -Path $targetPath -Recurse -Force }
+        Copy-Item -Path $dotfilesUnpackDir -Destination $targetPath -recurse -Force
     }
     else {
         if ([System.IO.Directory]::Exists($targetPath)) { remove-item -Path $targetPath -Recurse -Force }
