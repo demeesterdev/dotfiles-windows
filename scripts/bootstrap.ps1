@@ -2,7 +2,7 @@ $ProgressPreference = "SilentlyContinue"
 $dotfilesPath = Split-path -parent $PSScriptRoot
 $dotfilesPath | set-content (join-path $env:USERPROFILE '.dotfileslocation')
 
-# copy dotfiles
+# copy dotfiles from ./dotfiles
 $dotfilesSourceDir = join-path $dotfilesPath 'dotfiles'
 Copy-Item -Path (join-path $dotfilesSourceDir '**') -Destination $home -Include ** -Recurse
 
@@ -38,6 +38,10 @@ $GroupEndline
 "@ 
 
 foreach ($profileDir in $ProfileDirs) {
+    if(-not (Test-Path $profileDir)){
+        New-Item -ItemType Directory -Path $profileDir
+    }
+
     $psprofilefile = join-path $profileDir 'profile.ps1'
     if(-not (Test-Path $psprofilefile -PathType Leaf)){
         "# PSprofile Created by dotfile script" | Set-Content $psprofilefile -Force
@@ -50,7 +54,6 @@ foreach ($profileDir in $ProfileDirs) {
     }
     else {
         $loaderBlock | Add-Content -Path $psprofilefile
-
     }       
 }
 
