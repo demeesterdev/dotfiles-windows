@@ -113,7 +113,7 @@ write-information 'removing unwanted appx packages:'
 foreach ($UnwantedAppxPackage in $UnwantedAppxPackages){
     write-information ('  - {0}' -f $UnwantedAppxPackage)
     try{
-    Get-AppxPackage $UnwantedAppxPackage -AllUsers | Remove-AppxPackage | out-null
+    Get-AppxPackage $UnwantedAppxPackage -AllUsers -ErrorAction  'SilentlyContinue' | Remove-AppxPackage | out-null
     Get-AppXProvisionedPackage -Online | Where-Object DisplayName -like $UnwantedAppxPackage | Remove-AppxProvisionedPackage -Online | out-null
     }
     catch{
